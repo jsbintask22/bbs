@@ -30,6 +30,9 @@ idea：
 3. 添加 jar包
 ![mark](https://raw.githubusercontent.com/jsbintask22/static/master/bbs-resources/demo4.png)
 ![mark](https://raw.githubusercontent.com/jsbintask22/static/master/bbs-resources/demo5.png)
+4. 修改EmailUtil.java中的用户名密码为你自己的用户名密码（注册时使用该邮箱发送验证码）
+![mark](https://raw.githubusercontent.com/jsbintask22/static/master/bbs-resources/demo6.png)
+
 
 
 

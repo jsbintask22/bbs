@@ -36,7 +36,7 @@ public class EmailUtil {
 
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("Jsbintask@163.com", "Aa123456");
+				return new PasswordAuthentication("Jsbintask@163.com", "xxxxxx");
 			}
 		});
 
