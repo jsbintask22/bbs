@@ -1,0 +1,127 @@
+@charset "utf-8";
+.header {
+    /*height: 290px;*/
+    border: 1px solid whitesmoke;
+}
+body {
+}
+.logo {
+    width: 1200px;
+    margin: 0px auto;
+    /*border: 1px solid blue;*/
+    height: 110px;
+}
+.logo_img img {
+    width: 350px;
+    height:110px;
+}
+
+.logo_info {
+    position: relative;
+    /*border: 1px solid firebrick;*/
+    width: 600px;
+    height: 180px;
+    right: -600px;
+    top: -180px;
+
+}
+.logo_info img {
+    width: 110px;
+    height: 110px;
+    position: absolute;
+    margin-top: 110px;
+    margin-left: 420px;
+}
+.header_nav {
+    width: 1200px;
+    height: 100px;
+    margin: 15px auto 0px auto;
+    border: 1px solid darkturquoise;
+}
+.header_nav ul {
+    margin-top: 50px;
+    margin-left: 20px;
+}
+.header_nav li {
+    margin-right: 15px;
+}
+.nav_btn {
+    float: right;
+    margin-top: -40px;
+    padding-right: 15px;
+}
+.nav_btn a {
+    margin-right: 10px;
+}
+.page_header {
+    width: 1200px;
+    height: 50px;
+    margin: 0 auto;
+    border: 1px solid hotpink;
+}
+.article_search {
+    float: right;
+    margin-top: 10px;
+    margin-right: 200px;
+}
+.article_search input {
+   margin-right: 10px;
+    width: 200px;
+}
+.rigister {
+    float: right;
+    margin-right: 25px;
+    margin-top: 8px;
+}
+.page_header ul{
+    margin-top: 8px;
+    margin-left: 20px;
+}
+
+.main {
+    width: 1200px;
+    margin: 0px auto;
+}
+.main table tr td {
+    line-height: 45px;
+    padding: 5px;
+    text-align: center;
+}
+.main table thead th {
+    text-align: center;
+    color: darkcyan;
+}
+.main table tr td a {
+    text-decoration: none;
+    color: teal;
+}
+.footer {
+    width: 1200px;
+    margin: 0 auto;
+    margin-top: 15px;
+}
+.footer_main {
+    width: 60%;
+    color: black;
+    float: left;
+    margin-top: 20px;
+}
+.footer_main p {
+    font-size: 15px;
+    margin-top: 15px;
+    padding: 8px;
+    text-indent: 50px;
+}
+.footer_right {
+    float: right;
+    width: 40%;
+    padding-right: 10px;
+    padding-top: 40px;
+}
+.footer_right ul{
+    float: right;
+    margin-right: 15px;
+}
+.footer ul {
+    list-style-type: none;
+}

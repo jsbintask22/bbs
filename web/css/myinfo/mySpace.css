@@ -1,0 +1,40 @@
+.header {
+    padding: 10px ;
+    height: 150px;
+    border:1px solid darkcyan;
+}
+.header img{
+    width: 120px;
+    height: 120px;
+    margin-left: 15px;
+    margin-top: 10px;
+}
+.header a {
+    margin-top: 85px;
+    margin-left: 15px;
+}
+.left_nav {
+    width: 200px;
+   /* text-align: center;*/
+    float: left;
+}
+.left_nav ul {
+    margin-left: 25px;
+    margin-top: 10px;
+}
+.user_info {
+    float: left;
+    margin-left: 50px;
+    margin-top: 10px;
+    width: 1200px;
+    height: 600px;
+    border: 1px solid darkcyan;
+}
+
+.timeInfo {
+    float: right;
+    margin-right: 480px;
+}
+.timeInfo span {
+    font-size: 18px;
+}

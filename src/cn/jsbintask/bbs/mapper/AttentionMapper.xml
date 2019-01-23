@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jsbintask.bbs.mapper.AttentionMapper">
+    <resultMap id="attentionResultMap" type="cn.jsbintask.bbs.po.Attention">
+        <id property="user_id" column="user_id" />
+        <id property="puser_id" column="puser_id"/>
+        <result property="create_time" column="create_time"/>
+
+        <!--主动关联的用户-->
+        <association property="user" javaType="cn.jsbintask.bbs.po.User" column="user_id" select="cn.jsbintask.bbs.mapper.UserMapper.findUserById"/>
+
+        <!--被关注的用户-->
+        <association property="puser" javaType="cn.jsbintask.bbs.po.User" column="puser_id" select="cn.jsbintask.bbs.mapper.UserMapper.findUserById"/>
+    </resultMap>
+
+    <!--根据用户id得到改用所有的关注的用户-->
+    <select id="findAttentionByUserId" parameterType="int" resultMap="attentionResultMap">
+        SELECT * FROM attention WHERE user_id = #{user_id} ORDER BY create_time DESC
+    </select>
+
+    <!--取消关注，将该条记录删除-->
+    <delete id="cancelAttention">
+        DELETE FROM attention WHERE user_id = #{user_id} AND puser_id = #{puser_id}
+    </delete>
+
+    <!--关注一个用户-->
+    <insert id="attentionUser">
+        INSERT INTO attention VALUES (#{user_id}, #{puser_id}, now())
+    </insert>
+
+    <!--得到一条关注-->
+    <select id="findOneAttention" resultType="attention">
+        SELECT  * FROM attention WHERE user_id = #{user_id} AND puser_id = #{puser_id}
+    </select>
+
+    <!--根据用户id查找改用有多少个关注-->
+    <select id="countAttention_num" parameterType="int" resultType="int">
+        SELECT count(*) FROM attention WHERE user_id = #{user_id}
+    </select>
+</mapper>
