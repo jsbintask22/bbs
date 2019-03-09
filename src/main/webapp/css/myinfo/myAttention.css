@@ -1,0 +1,11 @@
+.attention {
+    float: left;
+    margin-right: 15px;
+}
+.nav_att {
+    list-style-type: none;
+    text-align: center;
+}
+.nav_att li {
+    margin-top: 8px;
+}

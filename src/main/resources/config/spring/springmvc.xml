@@ -1,0 +1,55 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<!-- 配置注解，能够使用注解 -->
+	<context:annotation-config />
+	<context:component-scan base-package="cn.jsbintask.bbs.controller" />
+
+	<!-- 配置处理器映射器和处理器适配器 -->
+	<mvc:annotation-driven />
+
+	<!-- 配置视图解析器 ，可以配上前缀和后缀，这样配置路径就不用写上全局路径 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 配置前缀 -->
+		<property name="prefix" value="/WEB-INF/jsp" />
+		<!-- 配置后缀 -->
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- 配置文件上传的解析bean，如果没有配置，则不能解析参数 ,id务必要配上 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="102400000" />
+	</bean>
+
+	<!--定义拦截器-->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/topic/postTopic"/>
+			<mvc:mapping path="/article/postArticle" />
+			<mvc:mapping path="/topic/collectTopic"/>
+			<mvc:mapping path="/otherSpace/attentionUser"/>
+			<bean class="cn.jsbintask.bbs.interceptor.PostTopicInter" />
+		</mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/admin/**"/>
+			<mvc:exclude-mapping path="/admin/login"/>
+			<!--由于拦截器在controller之前执行，所以这个地址也要拦截掉才行-->
+			<mvc:exclude-mapping path="/admin/index"/>
+			<bean class="cn.jsbintask.bbs.interceptor.AdminInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<!--解析静态资源-->
+	<mvc:default-servlet-handler />
+</beans>

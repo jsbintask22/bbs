@@ -13,8 +13,8 @@
 
  Date: 15/01/2019 09:41:14
 */
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`acm_bbs` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
-USE `acm_bbs`;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`jsbintask_bbs` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
+USE `jsbintask_bbs`;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -24,7 +24,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin`  (
-  `id` int(8) NOT NULL,
+  `id` int NOT NULL,
   `account` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `password` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
@@ -40,13 +40,13 @@ INSERT INTO `admin` VALUES (1, 'admin', '123456');
 -- ----------------------------
 DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article`  (
-  `id` int(8) NOT NULL AUTO_INCREMENT,
-  `topic_id` int(8) NOT NULL COMMENT '主题帖的id',
+  `id` int NOT NULL AUTO_INCREMENT,
+  `topic_id` int NOT NULL COMMENT '主题帖的id',
   `content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '回复的内容',
-  `reply_time` datetime(0) NOT NULL COMMENT '回复的时间',
-  `user_id` int(8) NOT NULL COMMENT 'userid为该帖子是谁发的',
-  `puser_id` int(8) NULL DEFAULT NULL COMMENT '被回复的人的id， 只有当该帖子是引用别人的才有',
-  `arefid` int(8) NULL DEFAULT NULL COMMENT '如果该条帖子为引用别人的话，则不为空，并且显示被引用的回复的id',
+  `reply_time` datetime NOT NULL COMMENT '回复的时间',
+  `user_id` int NOT NULL COMMENT 'userid为该帖子是谁发的',
+  `puser_id` int NULL DEFAULT NULL COMMENT '被回复的人的id， 只有当该帖子是引用别人的才有',
+  `arefid` int NULL DEFAULT NULL COMMENT '如果该条帖子为引用别人的话，则不为空，并且显示被引用的回复的id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 44 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -102,9 +102,9 @@ INSERT INTO `article` VALUES (43, 12, 'dsv<img src=\"http://img.baidu.com/hi/bob
 -- ----------------------------
 DROP TABLE IF EXISTS `attention`;
 CREATE TABLE `attention`  (
-  `user_id` int(8) NOT NULL COMMENT '关注的用户的id',
-  `puser_id` int(8) NOT NULL COMMENT '被关注的用户的id',
-  `create_time` datetime(0) NULL DEFAULT NULL,
+  `user_id` int NOT NULL COMMENT '关注的用户的id',
+  `puser_id` int NOT NULL COMMENT '被关注的用户的id',
+  `create_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`user_id`, `puser_id`) USING BTREE,
   INDEX `attention_id_pid`(`user_id`, `puser_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
@@ -120,9 +120,9 @@ INSERT INTO `attention` VALUES (1, 9, '2017-06-21 15:33:55');
 -- ----------------------------
 DROP TABLE IF EXISTS `collect`;
 CREATE TABLE `collect`  (
-  `user_id` int(8) NOT NULL COMMENT '用户id',
-  `topic_id` int(8) NOT NULL COMMENT '帖子id',
-  `create_time` datetime(0) NULL DEFAULT NULL,
+  `user_id` int NOT NULL COMMENT '用户id',
+  `topic_id` int NOT NULL COMMENT '帖子id',
+  `create_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`user_id`, `topic_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -140,12 +140,12 @@ INSERT INTO `collect` VALUES (8, 1, '2017-06-01 17:00:39');
 -- ----------------------------
 DROP TABLE IF EXISTS `topic`;
 CREATE TABLE `topic`  (
-  `id` int(8) NOT NULL AUTO_INCREMENT COMMENT '帖子id',
-  `user_id` int(8) NOT NULL COMMENT '发帖人的id',
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '帖子id',
+  `user_id` int NOT NULL COMMENT '发帖人的id',
   `reply_number` int(5) NULL DEFAULT 0 COMMENT '回复的数量',
   `topic` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '帖子主题',
   `content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '帖子的内容',
-  `create_time` datetime(0) NOT NULL COMMENT '发帖的时间',
+  `create_time` datetime NOT NULL COMMENT '发帖的时间',
   `flag` int(1) NOT NULL DEFAULT 1 COMMENT '帖子的状态，1表示正常，0表示已被删除',
   `isindex` int(1) NULL DEFAULT 0 COMMENT '精品帖子，1表示精品，0表示默认',
   PRIMARY KEY (`id`) USING BTREE
@@ -173,7 +173,7 @@ INSERT INTO `topic` VALUES (13, 13, 0, 'test', '<p>在此写上您的内容</p>'
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
-  `user_id` int(8) NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL AUTO_INCREMENT,
   `sno` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `sex` char(2) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '性别，只有男和女',
   `username` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -185,10 +185,10 @@ CREATE TABLE `user`  (
   `phone` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `sdept` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `clazz` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `article_num` int(8) NOT NULL DEFAULT 0 COMMENT '该用户发帖数',
+  `article_num` int NOT NULL DEFAULT 0 COMMENT '该用户发帖数',
   `status` int(1) NOT NULL DEFAULT 1 COMMENT '1为可发言, 0表示被禁言',
   `islock` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0表示未锁定，可以被其他用户查看',
-  `reply_num` int(8) NOT NULL DEFAULT 0,
+  `reply_num` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`user_id`) USING BTREE,
   UNIQUE INDEX `uemail`(`email`) USING BTREE,
   UNIQUE INDEX `sno`(`sno`) USING BTREE

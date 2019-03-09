@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jsbintask.bbs.mapper.AdminMapper">
+   <select id="findAdmin" parameterType="map" resultType="admin">
+       SELECT * FROM admin where account = #{account} AND password = #{password}
+   </select>
+
+    <!--更新管理员密码 -->
+    <update id="updatePwd" parameterType="map">
+        UPDATE admin SET password = #{newPwd} WHERE id = #{admin_id} AND password = #{initPwd}
+    </update>
+
+    <!--检验密码是否正确 -->
+    <select id="findAdminByInitPwd" parameterType="map" resultType="admin">
+        SELECT * from admin where password = #{initPwd} and id = #{admin_id}
+    </select>
+</mapper>

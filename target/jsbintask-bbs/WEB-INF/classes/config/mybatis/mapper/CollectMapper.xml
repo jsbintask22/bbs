@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jsbintask.bbs.mapper.CollectMapper">
+    <resultMap id="collectResultMap" type="cn.jsbintask.bbs.po.Collect">
+        <id column="user_id" property="user_id" />
+        <id column="topic_id" property="topic_id"/>
+        <result column="create_time" property="create_time"/>
+
+        <!--一对一关联一条帖子-->
+        <association property="topicVO" javaType="cn.jsbintask.bbs.po.TopicVO" column="topic_id" select="cn.jsbintask.bbs.mapper.TopicMapper.findTopicVOById"/>
+
+        <!--一对一关联一个用户-->
+        <association property="user" javaType="cn.jsbintask.bbs.po.User" column="user_id" select="cn.jsbintask.bbs.mapper.UserMapper.findUserById"/>
+    </resultMap>
+
+    <!--根据用户id找到所有自己收藏的帖子（收藏）-->
+    <select id="findCollectsByUserId" parameterType="int" resultMap="collectResultMap">
+        SELECT * FROM collect WHERE user_id = #{_parameter} ORDER BY create_time DESC
+    </select>
+
+    <!--取消收藏（删除一条收藏）-->
+    <delete id="cancelCollect">
+        DELETE FROM collect WHERE user_id = #{user_id} AND topic_id = #{topic_id}
+    </delete>
+
+    <!--收藏一条帖子 -->
+    <insert id="collectTopic">
+        INSERT INTO collect(user_id, topic_id, create_time) VALUES (#{user_id}, #{topic_id}, now())
+    </insert>
+
+    <!--根据用户id和帖子id找到一条收藏-->
+    <select id="findOneCollect" resultType="collect">
+        SELECT  * FROM collect WHERE user_id = #{user_id} AND topic_id = #{topic_id}
+    </select>
+
+    <!--根据用户id查找该用户有多少个个收藏-->
+    <select id="countCollect_num" parameterType="int" resultType="int">
+        SELECT count(*) FROM collect WHERE  user_id = #{user_id}
+    </select>
+
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jsbintask.bbs.mapper.ArticleMapper">
+    <!--定义Article类的resultMap-->
+    <resultMap id="lastArticleResultMap" type="cn.jsbintask.bbs.po.Article">
+        <id column="article_id" property="article_id" />
+        <result column="reply_time" property="reply_time" />
+
+        <!--一对一关联一个用户，一条帖子只能属于一个用户-->
+        <association property="user" javaType="cn.jsbintask.bbs.po.User">
+            <id column="id" property="user_id" />
+            <result column="username" property="username" />
+        </association>
+
+        <association property="topic" javaType="cn.jsbintask.bbs.po.Topic">
+            <id column="topic_id" property="topic_id" />
+        </association>
+    </resultMap>
+
+    <!--定义另外一个ResultMap，关联Article中所有的属性-->
+    <resultMap id="articleResultMap" type="cn.jsbintask.bbs.po.ArticleVO">
+        <id column="id" property="article_id" />
+        <result column="reply_time" property="reply_time" />
+        <result column="content" property="content" />
+        <result column="arefid" property="arefid" />
+        <result column="user_id" property="user_id" />
+        <result column="puser_id" property="puser_id" />
+        <result column="topic_id" property="topic_id" />
+
+        <!--一对一关联用户-->
+        <association property="user" javaType="cn.jsbintask.bbs.po.User" column="user_id"
+                     select="cn.jsbintask.bbs.mapper.UserMapper.findUserById"/>
+
+        <!--一对一关联被回复的用户-->
+        <association property="puser" javaType="cn.jsbintask.bbs.po.User" column="puser_id"
+                     select="cn.jsbintask.bbs.mapper.UserMapper.findUserById"/>
+
+    </resultMap>
+
+    <!--这里是为了配合找到最后的回复的人写的查询语句 ,分别为-->
+    <select id="findLastArticle" resultMap="lastArticleResultMap" parameterType="ArrayList">
+        select u.username,u.user_id, a.topic_id, a.reply_time, a.id article_id
+        from user u, article a
+        WHERE u.user_id = a.user_id and a.reply_time in(
+        SELECT max(reply_time) from article GROUP BY topic_id) AND
+        a.topic_id IN
+        <foreach collection="list" close=")" item="topic_id" open="(" separator=",">
+            #{topic_id}
+        </foreach>
+    </select>
+
+    <!--根据传进来一个主题id号，得到所有的回复，并且按时间升序排列，这里要注意，是articleResultMap，因为里面有两个map-->
+    <select id="findArticlesByTopicId" parameterType="int" resultMap="articleResultMap">
+        SELECT *
+        FROM article
+        WHERE topic_id = #{topicId}
+        ORDER BY reply_time ASC
+    </select>
+
+    <!--根据id找回复-->
+    <select id="findArticleById" parameterType="int" resultType="article">
+        SELECT *
+        FROM article
+        WHERE id = #{article_id}
+    </select>
+
+
+    <!--插入一条回复-->
+    <insert id="replyArticle" parameterType="cn.jsbintask.bbs.po.Article">
+        INSERT INTO article (topic_id, content, reply_time, user_id, puser_id, arefid)
+        VALUES (#{topic_id}, #{content}, now(), #{user_id}, #{puser_id}, #{arefid})
+    </insert>
+
+</mapper>

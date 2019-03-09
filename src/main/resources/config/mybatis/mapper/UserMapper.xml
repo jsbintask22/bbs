@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jsbintask.bbs.mapper.UserMapper">
+
+    <!--定义一个resultmap，映射user-->
+    <resultMap id="userResultMap" type="cn.jsbintask.bbs.po.User">
+        <id column="id" property="user_id"></id>
+
+    </resultMap>
+
+    <!--帐号密码登录-->
+    <select id="findUserByNameAndPwd" parameterType="map"
+            resultType="cn.jsbintask.bbs.po.User">
+        SELECT *
+        FROM user
+        WHERE (sno = #{account} AND password = #{password}) OR
+              (email = #{account} AND password = #{password})
+    </select>
+
+    <!--通过邮箱能否找到用户-->
+    <select id="findUserByEmail" parameterType="string"
+            resultType="cn.jsbintask.bbs.po.User">
+        SELECT *
+        FROM user
+        WHERE email = #{_parameter}
+    </select>
+
+    <!--根据学号能否找到用户 -->
+    <select id="findUserBySno" parameterType="string" resultType="user">
+        SELECT  * FROM user WHERE sno = #{_parameter}
+    </select>
+
+
+    <!--根据id找用户-->
+    <select id="findUserById" parameterType="int" resultType="user">
+        SELECT *
+        FROM user
+        WHERE user_id = #{_userId}
+    </select>
+
+    <!--根据用户名模糊查找用户-->
+    <select id="findUsersByLikeName" parameterType="string" resultType="user">
+        <bind name="var" value="'%' + _parameter + '%'"/>
+        SELECT * FROM user WHERE username LIKE #{var}
+    </select>
+
+    <!--得到所有的用户-->
+    <select id="findAllUser" resultType="user">
+        SELECT *
+        FROM user
+        ORDER BY article_num DESC
+    </select>
+
+    <!--找到那些被禁言的用户-->
+    <select id="findUsersByShuted" resultType="user">
+        SELECT *
+        FROM user
+        WHERE status = 0
+        ORDER BY article_num DESC, reply_num DESC
+    </select>
+
+
+    <!--添加一个用户（注册）-->
+    <insert id="addUser" parameterType="user">
+        INSERT INTO user (sno, sex, username, imgUrl, password, email) VALUES (#{sno}, '男', #{username},'defaultHead.png', #{password}, #{email})
+    </insert>
+
+    <!--检查密码是否正确-->
+    <select resultType="user" id="checkInitPwd" parameterType="map">
+        SELECT * FROM user WHERE password = #{password} AND user_id = #{user_id}
+    </select>
+
+    <!--更新用户的登录密码-->
+    <update id="updatePwdByUser_id" parameterType="map">
+        UPDATE user SET password = #{password} WHERE user_id = #{user_id}
+    </update>
+
+    <!--用户定义更新控件能否被其他人访问-->
+    <update id="updateIsLockById" parameterType="map">
+        UPDATE user
+        SET islock = #{isLock}
+        WHERE user_id = #{user_id}
+    </update>
+
+    <!--当一个用户发了帖子，更新该用户的发帖数-->
+    <update id="updateUserArticleAndTopicNum" parameterType="map">
+        UPDATE user SET
+        <choose>
+            <when test="updateType=='article_num'">
+                article_num = article_num + 1
+            </when>
+            <when test="updateType=='reply_num'">
+                reply_num = reply_num + 1
+            </when>
+            <otherwise>
+                user_id = user_id
+            </otherwise>
+        </choose>
+        WHERE user_id = #{user_id}
+    </update>
+
+    <!--更新用户发言，是禁言，还是解禁-->
+    <update id="updateUsersStatus" parameterType="map">
+        UPDATE user set
+        <if test="status==1">
+            status = 1
+        </if>
+        <if test="status==0">
+            status = 0
+        </if>
+        where user_id in
+        <foreach collection="user_ids" open="(" separator="," item="user_id" close=")">
+            #{user_id}
+        </foreach>
+    </update>
+
+    <!--根据传进来的对象，更新一个用户信息-->
+    <update id="updateUserInfo" parameterType="user">
+        UPDATE user
+        <set>
+            <if test="username!=null and username.trim()!=''">
+                username = #{username},
+            </if>
+            <if test="sex!=null and sex.trim()!=''">
+                sex = #{sex},
+            </if>
+            <if test="sdept!=null and sdept.trim()!=''">
+                sdept = #{sdept},
+            </if>
+            <if test="clazz!=null and clazz.trim()!=''">
+                clazz = #{clazz},
+            </if>
+            <if test="phone!=null and phone.trim()!=''">
+                phone = #{phone},
+            </if>
+            <if test="sign!=null and sign.trim()!=''">
+                sign = #{sign},
+            </if>
+            <if test="imgUrl!=null and imgUrl.trim()!=''">
+                imgUrl = #{imgUrl},
+            </if>
+            <if test="sign!=null and sign.trim()!=''">
+                sign = #{sign}
+            </if>
+        </set>
+        WHERE user_id = #{user_id}
+    </update>
+</mapper>
